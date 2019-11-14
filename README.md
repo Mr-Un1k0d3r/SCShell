@@ -10,9 +10,12 @@ Instead of creating a service it simply remotely open a service and modify the b
 
 Then it starts the service.
 
-Everything is happening over DCERPC including authentication.
+Once the execution is completed the service binary path is reverted to the original one. The original service path is extracted using `QueryServiceConfigA`.
+
+Everything is happening over DCERPC including the authentication.
 
 ![network](https://raw.githubusercontent.com/Mr-Un1k0d3r/SCShell/master/network.png)
+
 
 
 # Usage
