@@ -2,7 +2,7 @@
 
 Fileless lateral movement tool that relies on ChangeServiceConfigA to run command. The beauty of this tool is that it doesn't perform authentication against SMB everything is performed over DCERPC.
 
-The utility can be used remotely WITHOUT registering a service or creating a service. It also doesn't have to drop any file on the remote system* (Depend on the technique used to execute 
+The utility can be used remotely WITHOUT registering a service or creating a service. It also doesn't have to drop any file on the remote system* (Depend on the technique used to execute)
 
 # How it work
 
