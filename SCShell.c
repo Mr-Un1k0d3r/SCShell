@@ -30,35 +30,26 @@ int main(int argc, char **argv) {
 
     if(username != NULL) {
         HANDLE hToken = NULL;
-        printf("Username was provided attempting to call LogonUserA\n");
-        bResult = LogonUserA(username, domain, password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, &hToken);
-        if(!bResult) {
-            printf("LogonUserA failed %ld\n", GetLastError());
-            ExitProcess(0);
+        if(strcmp(username, "pth") == 0) {
+            printf("Using Pass-The-Hash for authentication\n");
+            if(!OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken)) {
+                printf("OpenProcessToken failed %ld\n", GetLastError());
+                ExitProcess(0);
+            }
+        } else {
+            printf("Username was provided attempting to call LogonUserA\n");
+            bResult = LogonUserA(username, domain, password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, &hToken);
+            if(!bResult) {
+                printf("LogonUserA failed %ld\n", GetLastError());
+                ExitProcess(0);
+            }
         }
+
         bResult = FALSE;
         bResult = ImpersonateLoggedOnUser(hToken);
         if(!bResult) {
             printf("ImpersonateLoggedOnUser failed %ld\n", GetLastError());
             ExitProcess(0);
-        }
-    }
-    else {
-        HANDLE hToken = NULL;
-        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken)){
-            printf("OpenProcessToken() - Getting the handle to access token failed, error %u\n", GetLastError());
-        }
-        else{
-            printf("OpenProcessToken() - Got the handle to access token!\n");
-        }
-	    
-		// Lets the calling process impersonate the security context of a logged-on user.
-        if (ImpersonateLoggedOnUser(hToken)) {
-            printf("ImpersonateLoggedOnUser() is OK.\n");
-        }
-        else{
-            printf("ImpersonateLoggedOnUser() failed, error %u.\n", GetLastError());
-            exit(-1);
         }
     }
 
