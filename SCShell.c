@@ -9,8 +9,8 @@ int main(int argc, char **argv) {
     CHAR* targetHost = argv[1];
     CHAR* serviceName = argv[2];
     CHAR* payload = argv[3];
-    CHAR* username = argv[4];
-    CHAR* domain = argv[5];
+    CHAR* domain = argv[4];
+    CHAR* username = argv[5];
     CHAR* password = argv[6];
     LPQUERY_SERVICE_CONFIGA lpqsc = NULL;
     DWORD dwLpqscSize = 0;
