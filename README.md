@@ -51,6 +51,17 @@ Service was started.
 
 I'm using the XblAuthManager as the target which is the Xbox Accessory Management Service
 
+# Passing the Hash
+
+You can use the utility in conjonction with pass the hash. By default the current process token will be used. You can set the current process token using standard pass the hash approach.
+
+On the local system
+```
+sekurlsa::pth /user:user /domain:domain /ntlm:hash /run:cmd.exe
+```
+
+Then run the SCShell.exe within the newly created cmd.exe.
+
 # Compiling from source
 
 The code was compiled on Windows using GCC Mingw compiler
