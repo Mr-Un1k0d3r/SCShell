@@ -43,6 +43,24 @@ int main(int argc, char **argv) {
             ExitProcess(0);
         }
     }
+    else {
+        HANDLE hToken = NULL;
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken)){
+            printf("OpenProcessToken() - Getting the handle to access token failed, error %u\n", GetLastError());
+        }
+        else{
+            printf("OpenProcessToken() - Got the handle to access token!\n");
+        }
+	    
+		// Lets the calling process impersonate the security context of a logged-on user.
+        if (ImpersonateLoggedOnUser(hToken)) {
+            printf("ImpersonateLoggedOnUser() is OK.\n");
+        }
+        else{
+            printf("ImpersonateLoggedOnUser() failed, error %u.\n", GetLastError());
+            exit(-1);
+        }
+    }
 
     SC_HANDLE schManager = OpenSCManagerA(targetHost, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS);
     if(schManager == NULL) {
