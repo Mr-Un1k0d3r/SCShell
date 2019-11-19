@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
     printf("Service path was changed to \"%s\"\n", payload);
 
     bResult = FALSE;
-    bResult = StartServiceA(schService, NULL, NULL);
+    bResult = StartServiceA(schService, 0, NULL);
     DWORD dwResult = GetLastError();
     if(!bResult && dwResult != 1053) {
         printf("StartServiceA failed to start the service. %ld\n", GetLastError());
