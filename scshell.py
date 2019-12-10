@@ -105,6 +105,8 @@ class SCSHELL:
 
         resp = scmr.hRQueryServiceConfigW(self.__scmr, serviceHandle)
         binaryPath = resp['lpServiceConfig']['lpBinaryPathName']
+        startType = resp['lpServiceConfig']['dwStartType']
+        errorControl = resp['lpServiceConfig']['dwErrorControl']
         logging.debug('(%s) Current service binary path %s' % (serviceName, binaryPath))
 
         logging.info('Command need to use FULL path. No command output.')
@@ -148,8 +150,8 @@ class SCSHELL:
                     self.__scmr,
                     serviceHandle,
                     scmr.SERVICE_NO_CHANGE,
-                    scmr.SERVICE_DEMAND_START,
-                    scmr.SERVICE_ERROR_IGNORE,
+                    startType,
+                    errorControl,
                     binaryPath,
                     NULL,
                     NULL,
