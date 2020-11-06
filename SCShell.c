@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
     printf("Opening %s\n", serviceName);
     SC_HANDLE schService = OpenServiceA(schManager, serviceName, SERVICE_ALL_ACCESS);
     if(schService == NULL) {
+        CloseServiceHandle(schManager);
         printf("OpenServiceA failed %ld\n", GetLastError());
         ExitProcess(0);
     }
@@ -105,5 +106,10 @@ int main(int argc, char **argv) {
         }
         printf("Service path was restored to \"%s\"\n", originalBinaryPath);
     }
+    
+    GlobalFree(lpqsc);
+    CloseHandle(hToken);
+    CloseServiceHandle(schManager);
+    CloseServiceHandle(schService);
     return 0;
 }
