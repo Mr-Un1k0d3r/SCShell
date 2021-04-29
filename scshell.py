@@ -186,7 +186,7 @@ if __name__ == '__main__':
     parser.add_argument('target', action='store', help='[[domain/]username[:password]@]<targetName or address>')
     parser.add_argument('-debug', action='store_true', help='Turn DEBUG output ON')
     parser.add_argument('-service-name', action='store', default='XblAuthManager', help='Targeted service (default to: XblAuthManager)')
-    parser.add_argument('-no-cmd', action='store', default=False, help='By default it prepend C:\windows\system32\cmd.exe /c in front of your command')
+    parser.add_argument('-no-cmd', action='store_true', default=False, help='By default it prepend C:\windows\system32\cmd.exe /c in front of your command')
     group = parser.add_argument_group('connection')
 
     group.add_argument('-dc-ip', action='store', metavar='ip address', help='IP Address of the domain controller. If omitted it will use the domain part (FQDN) specified in the target parameter')
