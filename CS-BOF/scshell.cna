@@ -19,7 +19,6 @@ sub bscshell {
 }
 
 alias scshell {
-    println(size(@_));
     if (size(@_) < 4)
     {
         berror($1, "Invalid number of arguments! (See 'help scshell')");
