@@ -16,7 +16,7 @@ Simply load the aggressor script [scshell.cna](./scshell.cna).
 Then you have the beacon command `scshell`. For getting cmd options:
 
 ```
-help scshell
+beacon> help scshell
 ```
 
 Two authentication methods are implemented (in different BOFs):
@@ -31,28 +31,35 @@ Also implemented the lateral movement technique using the internal
 (`scshell` and `scshell64` should be there):
 
 ```
-jump
+beacon> jump
 ```
 
 For using `jump`:
 
 ```
-help jump
+beacon> help jump
 ```
 
-There are configurable setting for the `jump scshell` and the
-`jump scshell64` technqiues. For querying and setting the options, use:
+There are configurable settings for the `jump scshell` and the
+`jump scshell64` techniques. Here it is:
 
 ```
-scshell-settings
+beacon> help scshell-settings
+Use: scshell-settings [setting] [value]
+
+Set settings to be used for the `jump scshell[64]` cmds.
+
+Supported settings:
+  service - Set the service to be changed
+  exepath - Remote exe path for uploaded artifact
+  delay - Add an optional delay (in seconds) between remote file copy and cmd execution (via starting the temporarily changed service)
+
+Without any options the command simply displays the current settings.
 ```
 
-For help:
-
-```
-help scshell-settings
-```
-
-Note that there is an optional configurable delay between uploading
-the artifact on the remote target and executing it, this might be
-useful for specific EDR evasion.
+Note that this implementation of jump works similarly to other
+builtin jump implementations, thus it breaks the beauty of SCShell
+filelessness (it pushes an artifact svcexe to the remote target).
+However, there is an optional configurable delay between uploading
+the artifact to the remote target and detonating it, this might be
+useful for specific EDR evasions.
