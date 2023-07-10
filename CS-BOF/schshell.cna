@@ -1,7 +1,7 @@
 alias scshell {
     local('$handle $data $args');
 
-    $handle = openf(script_resource("bofscshell.o"));
+    $handle = openf(script_resource("scshellbof.o"));
     $data   = readb($handle, -1);
     closef($handle);
 
